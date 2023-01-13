@@ -98,6 +98,11 @@ async def add_like(post_id: int,
     result = await session.execute(query)
     if result.first():
         return JSONResponse(content={"message": "Conflict - post already like"}, status_code=409)
+    query = select(post.c.author_id).where(post.c.id == post_id)
+    result = await session.execute(query)
+    author_id, *_ = result.first()
+    if author_id == user.id:
+        return JSONResponse(content={"message": "Conflict - this post is own"}, status_code=409)
 
     new_like = new_like.dict()
     new_like["post_id"] = post_id
@@ -121,8 +126,3 @@ async def remove_like(post_id: int,
     await session.execute(stmt)
     await session.commit()
     return {"status": "like remove"}
-
-
-# async def get_num_likes(post_id: int):
-#     query = select(like).where(like.c.post_id == post_id).count()
-#     return num_likes
