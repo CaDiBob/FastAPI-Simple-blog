@@ -24,6 +24,15 @@ pip install -r requirements.txt
 - `JWT_SECRET`=любой набор символов(для генерации токена)
 - `JWT_SECRET_AFTER_REGISTER`=любой набор символов (для генерации токена)
 ### Запуск
+
+#### Создать миграции
+```
+alembic revision --autogenerate -m "initial commit"
+
+alembic upgrade head
+```
+
+#### Запустить приложение
 ```
 uvicorn src.main:app --reload
 ```
